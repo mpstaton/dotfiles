@@ -1,0 +1,8 @@
+theme = carbonfox
+background-opacity = 0.60
+background-blur-radius = 40
+font-family = "Menlo"
+font-size = 14
+
+adjust-cell-height = 10%
+adjust-cursor-thickness = 12
