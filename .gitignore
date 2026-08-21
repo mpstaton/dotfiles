@@ -1,1 +1,5 @@
 .DS_Store
+
+# gh auth state — machine-local, and gains a plaintext oauth_token
+# on any host without a system keyring (e.g. headless Linux/NixOS).
+gh/hosts.yml
