@@ -1,10 +1,14 @@
 theme = carbonfox
 background-opacity = 0.60
 background-blur-radius = 40
-# A real Nerd Font rather than Menlo: Menlo carries none of the powerline or
-# devicon glyphs the starship prompt and eza's icons use, so every one of them
-# was coming from macOS font fallback, which spaces them inconsistently.
-font-family = "MesloLGS Nerd Font Mono"
+# JetBrainsMono Nerd Font, matching hypr-nix -- that host installs
+# nerd-fonts.jetbrains-mono as its monospace default.
+#
+# This line used to say Menlo, which quietly meant two different fonts. NixOS
+# has no Menlo, so fontconfig fell through to the Nerd Font and the glyphs
+# rendered; macOS does have Menlo, so it won and the prompt lost its icons to
+# partial symbol fallback. Naming the font outright makes both hosts agree.
+font-family = "JetBrainsMono Nerd Font Mono"
 font-size = 14
 
 adjust-cell-height = 10%
