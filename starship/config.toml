@@ -1,116 +1,114 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Laid out to mirror the oh-my-posh my-tokyo theme this repo still carries in
+# oh-my-posh/themes/, so the prompt reads the same across the machines that run
+# starship and the ones that run oh-my-posh:
+#
+#   ┌─[ :m2air: mps][ 20260911@01:27:19]
+#   ┣[ ~/dotfiles]  m2air              ┣[ 4.1s][ RAM: 6/8GB][ 91%]
+#   └─❯
+#
+# Bracket punctuation is drawn by each module rather than the format string, so
+# a module that has nothing to say takes its brackets with it instead of
+# leaving an empty [] behind.
 format = """
-$os\
-$username\
-$hostname\
-$directory\
-$git_branch\
-$git_state\
-$git_status\
-$git_metrics\
-$fill\
-$nodejs\
-$cmd_duration $jobs $memory_usage $battery $time\
-$line_break\
-$character"""
+[┌─](bright-black)$os$hostname$username$time
+[┣](bright-black)$directory$git_branch$git_state$git_status$git_metrics$fill$nodejs$cmd_duration$jobs$memory_usage$battery
+[└─](bright-black)$character"""
 
-# starship hides both of these by default -- username only renders as root or
-# over SSH, and hostname is ssh_only. Forced on so the prompt identifies the
-# machine the way the oh-my-posh theme did, which matters across m2air, the
-# M4 Pro and the NixOS box.
-[username]
-show_always = true
-style_user = "bold purple"
-style_root = "bold red"
-format = "[$user]($style)"
-
-[hostname]
-ssh_only = false
-style = "purple"
-format = "[@$hostname]($style) "
-
-# Icon modules. starship ships these disabled or thresholded off by default,
-# so the prompt had no glyphs beyond git -- which read as "the Nerd Font isn't
-# working" next to the oh-my-posh theme, when the font was fine and the config
-# simply never asked for them.
 [os]
 disabled = false
 style = "bold white"
-format = "[$symbol]($style)"
+format = '[\[](bright-black)[$symbol]($style)[:](bright-black)'
 
 [os.symbols]
 Macos = " "
 Linux = " "
 NixOS = " "
 
+[hostname]
+ssh_only = false
+style = "bold cyan"
+format = '[$hostname]($style)[:](bright-black)'
+
+[username]
+show_always = true
+style_user = "bold purple"
+style_root = "bold red"
+format = '[ $user]($style)[\]](bright-black)'
+
+[time]
+disabled = false
+style = "bold white"
+# Matches my-tokyo's stamp exactly: YYYYMMDD@HH:MM:SS, 24-hour.
+use_12hr = false
+time_format = "%Y%m%d@%T"
+format = '[\[](bright-black)[ $time]($style)[\]](bright-black)'
+
+[directory]
+style = "blue"
+read_only = " "
+truncation_length = 4
+truncate_to_repo = false
+format = '[\[](bright-black)[ $path]($style)[$read_only]($read_only_style)[\]](bright-black) '
+
+[git_branch]
+symbol = " "
+style = "bright-black"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "cyan"
+format = '([\[$all_status$ahead_behind\]]($style) )'
+
+[git_state]
+style = "bright-black"
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+
+[git_metrics]
+disabled = false
+
+[fill]
+symbol = " "
+
+[nodejs]
+format = "[$symbol($version )]($style)"
+
+[cmd_duration]
+style = "yellow"
+format = '[\[](bright-black)[ $duration]($style)[\]](bright-black)'
+
+[jobs]
+symbol = ""
+style = "bold red"
+number_threshold = 1
+format = '[\[](bright-black)[$symbol]($style)[\]](bright-black)'
+
 [memory_usage]
 disabled = false
 threshold = 0
-symbol = " "
 style = "purple"
-format = "[$symbol${ram_pct}]($style)"
+format = '[\[](bright-black)[ RAM: ${ram}]($style)[\]](bright-black)'
 
 [battery]
 full_symbol = " "
 charging_symbol = " "
 discharging_symbol = " "
+format = '[\[](bright-black)[$symbol$percentage]($style)[\]](bright-black)'
 
 [[battery.display]]
 threshold = 100
 style = "bold green"
-
-[nodejs]
-format = "[$symbol($version )]($style)"
-
-[fill]
-symbol = " "
-
-[directory]
-style = "blue"
-read_only = " "
-truncation_length = 4
-truncate_to_repo = false
 
 [character]
 success_symbol = "[❯](purple)"
 error_symbol = "[❯](red)"
 vicmd_symbol = "[❮](green)"
 
-[git_branch]
-symbol = " "
-format = "[$symbol$branch]($style) "
-style = "bright-black"
-
-[jobs]
-symbol = ""
-style = "bold red"
-number_threshold = 1
-format = "[$symbol]($style)"
-
-[git_status]
-format = '([\[$all_status$ahead_behind\]]($style) )'
-style = "cyan"
-
-[git_state]
-format = '\([$state( $progress_current/$progress_total)]($style)\) '
-style = "bright-black"
-
-[git_metrics]
-disabled = false
-
-[cmd_duration]
-format = "[ $duration]($style)"
-style = "yellow"
-
 [rust]
-symbol = " "
-
-[time]
-disabled = false
-style = "bold white"
-format = "[ $time]($style)"
+symbol = " "
 
 [custom.stunnel]
 when = "ps aux | grep stunnel | grep -v grep"
 command = "ps -o etime= -p $(ps aux | grep stunnel | grep -v grep | awk '{print $2}')"
 style = "red"
-format = "[TUNNEL OPEN for $output]($style)"
