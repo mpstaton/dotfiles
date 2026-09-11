@@ -1,4 +1,5 @@
 format = """
+$os\
 $username\
 $hostname\
 $directory\
@@ -8,10 +9,14 @@ $git_status\
 $git_metrics\
 $fill\
 $nodejs\
-$cmd_duration $jobs $time\
+$cmd_duration $jobs $memory_usage $battery $time\
 $line_break\
 $character"""
 
+# starship hides both of these by default -- username only renders as root or
+# over SSH, and hostname is ssh_only. Forced on so the prompt identifies the
+# machine the way the oh-my-posh theme did, which matters across m2air, the
+# M4 Pro and the NixOS box.
 [username]
 show_always = true
 style_user = "bold purple"
@@ -22,6 +27,40 @@ format = "[$user]($style)"
 ssh_only = false
 style = "purple"
 format = "[@$hostname]($style) "
+
+# Icon modules. Symbols are written as explicit codepoints, verified against
+# the JetBrainsMono Nerd Font cmap -- note memory is U+F035B, since the U+F85A
+# most configs still use was dropped in Nerd Fonts v3 and renders as tofu.
+#
+# Original note: starship ships these disabled or thresholded off by default,
+# so the prompt had no glyphs beyond git -- which read as "the Nerd Font isn't
+# working" next to the oh-my-posh theme, when the font was fine and the config
+# simply never asked for them.
+[os]
+disabled = false
+style = "bold white"
+format = "[$symbol]($style)"
+
+[os.symbols]
+Macos = " "
+Linux = " "
+NixOS = " "
+
+[memory_usage]
+disabled = false
+threshold = 0
+symbol = "󰍛 "
+style = "purple"
+format = "[$symbol${ram_pct}]($style)"
+
+[battery]
+full_symbol = " "
+charging_symbol = " "
+discharging_symbol = " "
+
+[[battery.display]]
+threshold = 100
+style = "bold green"
 
 [nodejs]
 format = "[$symbol($version )]($style)"
@@ -63,11 +102,8 @@ style = "bright-black"
 disabled = false
 
 [cmd_duration]
-format = "[$duration]($style)"
+format = "[ $duration]($style)"
 style = "yellow"
-
-[memory_usage]
-symbol = " "
 
 [rust]
 symbol = " "
@@ -77,7 +113,7 @@ disabled = false
 use_12hr = false
 time_format = "%T"
 style = "bold white"
-format = "[$time]($style)"
+format = "[ $time]($style)"
 
 [custom.stunnel]
 when = "ps aux | grep stunnel | grep -v grep"
