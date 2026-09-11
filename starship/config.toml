@@ -1,4 +1,5 @@
 format = """
+$os\
 $username\
 $hostname\
 $directory\
@@ -8,7 +9,7 @@ $git_status\
 $git_metrics\
 $fill\
 $nodejs\
-$cmd_duration $jobs $time\
+$cmd_duration $jobs $memory_usage $battery $time\
 $line_break\
 $character"""
 
@@ -26,6 +27,36 @@ format = "[$user]($style)"
 ssh_only = false
 style = "purple"
 format = "[@$hostname]($style) "
+
+# Icon modules. starship ships these disabled or thresholded off by default,
+# so the prompt had no glyphs beyond git -- which read as "the Nerd Font isn't
+# working" next to the oh-my-posh theme, when the font was fine and the config
+# simply never asked for them.
+[os]
+disabled = false
+style = "bold white"
+format = "[$symbol]($style)"
+
+[os.symbols]
+Macos = " "
+Linux = " "
+NixOS = " "
+
+[memory_usage]
+disabled = false
+threshold = 0
+symbol = " "
+style = "purple"
+format = "[$symbol${ram_pct}]($style)"
+
+[battery]
+full_symbol = " "
+charging_symbol = " "
+discharging_symbol = " "
+
+[[battery.display]]
+threshold = 100
+style = "bold green"
 
 [nodejs]
 format = "[$symbol($version )]($style)"
@@ -67,11 +98,8 @@ style = "bright-black"
 disabled = false
 
 [cmd_duration]
-format = "[$duration]($style)"
+format = "[ $duration]($style)"
 style = "yellow"
-
-[memory_usage]
-symbol = " "
 
 [rust]
 symbol = " "
@@ -79,7 +107,7 @@ symbol = " "
 [time]
 disabled = false
 style = "bold white"
-format = "[$time]($style)"
+format = "[ $time]($style)"
 
 [custom.stunnel]
 when = "ps aux | grep stunnel | grep -v grep"
