@@ -12,6 +12,21 @@ $cmd_duration $jobs $time\
 $line_break\
 $character"""
 
+# starship hides both of these by default -- username only renders as root or
+# over SSH, and hostname is ssh_only. Forced on so the prompt identifies the
+# machine the way the oh-my-posh theme did, which matters across m2air, the
+# M4 Pro and the NixOS box.
+[username]
+show_always = true
+style_user = "bold purple"
+style_root = "bold red"
+format = "[$user]($style)"
+
+[hostname]
+ssh_only = false
+style = "purple"
+format = "[@$hostname]($style) "
+
 [nodejs]
 format = "[$symbol($version )]($style)"
 
