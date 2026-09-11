@@ -19,8 +19,11 @@ alias ll='ls -lahG'
 alias ..='cd ..'
 alias ...='cd ../..'
 
-# Initialize Oh My Posh
-eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/themes/my-tokyo.omp.json)"
+# Prompt: starship, so zsh/fish/nushell all render the same prompt from one
+# ~/.config/starship.toml. oh-my-posh is still installed and its theme is still
+# in this repo -- swap the two lines below to go back to it.
+eval "$(starship init zsh)"
+# eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/themes/my-tokyo.omp.json)"
 
 # Enable command syntax highlighting if available
 if [ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
