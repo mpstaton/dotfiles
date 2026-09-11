@@ -1,122 +1,113 @@
-format = """
-$os\
-$username\
-$hostname\
-$directory\
-$git_branch\
-$git_state\
-$git_status\
-$git_metrics\
-$fill\
-$nodejs\
-$cmd_duration $jobs $memory_usage $battery $time\
-$line_break\
-$character"""
+"$schema" = 'https://starship.rs/config-schema.json'
 
-# starship hides both of these by default -- username only renders as root or
-# over SSH, and hostname is ssh_only. Forced on so the prompt identifies the
-# machine the way the oh-my-posh theme did, which matters across m2air, the
-# M4 Pro and the NixOS box.
+# Three-line boxed prompt. Every symbol below is an explicit escape checked
+# against the JetBrainsMono Nerd Font cmap rather than a pasted character --
+# pasted glyphs were silently lost on the way into this file once already,
+# which left the modules rendering bare spaces and looked like a font fault.
+#
+# Memory is U+F035B. The U+F85A that most published starship configs still
+# carry was retired in Nerd Fonts v3 and renders as tofu.
+#
+# Bracket punctuation belongs to each module, not the format string, so a
+# module with nothing to say takes its brackets with it instead of leaving an
+# empty [] behind.
+format = """
+[┌─](bright-black)$os$hostname$username$time
+[┣](bright-black)$directory$git_branch$git_state$git_status$git_metrics$fill$nodejs$cmd_duration$jobs$memory_usage$battery
+[└─](bright-black)$character"""
+
+[os]
+disabled = false
+style = "bold white"
+format = '[\[](bright-black)[$symbol]($style)[:](bright-black)'
+
+[os.symbols]
+Macos = ""
+Linux = ""
+NixOS = ""
+
+[hostname]
+ssh_only = false
+style = "bold cyan"
+format = '[$hostname]($style)[:](bright-black)'
+
 [username]
 show_always = true
 style_user = "bold purple"
 style_root = "bold red"
-format = "[$user]($style)"
+format = '[ $user]($style)[\]](bright-black)'
 
-[hostname]
-ssh_only = false
-style = "purple"
-format = "[@$hostname]($style) "
-
-# Icon modules. Symbols are written as explicit codepoints, verified against
-# the JetBrainsMono Nerd Font cmap -- note memory is U+F035B, since the U+F85A
-# most configs still use was dropped in Nerd Fonts v3 and renders as tofu.
-#
-# Original note: starship ships these disabled or thresholded off by default,
-# so the prompt had no glyphs beyond git -- which read as "the Nerd Font isn't
-# working" next to the oh-my-posh theme, when the font was fine and the config
-# simply never asked for them.
-[os]
+[time]
 disabled = false
-style = "bold white"
-format = "[$symbol]($style)"
+style = "bold green"
+use_12hr = false
+time_format = "%Y%m%d@%T"
+format = '[\[](bright-black)[ $time]($style)[\]](bright-black)'
 
-[os.symbols]
-Macos = " "
-Linux = " "
-NixOS = " "
+[directory]
+style = "blue"
+read_only = " "
+truncation_length = 4
+truncate_to_repo = false
+format = '[\[](bright-black)[ $path]($style)[$read_only]($read_only_style)[\]](bright-black) '
+
+[git_branch]
+symbol = " "
+style = "bright-black"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "cyan"
+format = '([\[$all_status$ahead_behind\]]($style) )'
+
+[git_state]
+style = "bright-black"
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+
+[git_metrics]
+disabled = false
+
+[fill]
+symbol = " "
+
+[nodejs]
+format = "[$symbol($version )]($style)"
+
+[cmd_duration]
+style = "yellow"
+format = '[\[](bright-black)[ $duration]($style)[\]](bright-black)'
+
+[jobs]
+symbol = ""
+style = "bold red"
+number_threshold = 1
+format = '[\[](bright-black)[$symbol]($style)[\]](bright-black)'
 
 [memory_usage]
 disabled = false
 threshold = 0
-symbol = "󰍛 "
 style = "purple"
-format = "[$symbol${ram_pct}]($style)"
+format = '[\[](bright-black)[󰍛 RAM: ${ram}]($style)[\]](bright-black)'
 
 [battery]
 full_symbol = " "
 charging_symbol = " "
 discharging_symbol = " "
+format = '[\[](bright-black)[$symbol$percentage]($style)[\]](bright-black)'
 
 [[battery.display]]
 threshold = 100
-style = "bold green"
-
-[nodejs]
-format = "[$symbol($version )]($style)"
-
-[fill]
-symbol = " "
-
-[directory]
-style = "blue"
-read_only = " "
-truncation_length = 4
-truncate_to_repo = false
+style = "bold red"
 
 [character]
 success_symbol = "[❯](purple)"
 error_symbol = "[❯](red)"
 vicmd_symbol = "[❮](green)"
 
-[git_branch]
-symbol = " "
-format = "[$symbol$branch]($style) "
-style = "bright-black"
-
-[jobs]
-symbol = ""
-style = "bold red"
-number_threshold = 1
-format = "[$symbol]($style)"
-
-[git_status]
-format = '([\[$all_status$ahead_behind\]]($style) )'
-style = "cyan"
-
-[git_state]
-format = '\([$state( $progress_current/$progress_total)]($style)\) '
-style = "bright-black"
-
-[git_metrics]
-disabled = false
-
-[cmd_duration]
-format = "[ $duration]($style)"
-style = "yellow"
-
 [rust]
 symbol = " "
-
-[time]
-disabled = false
-use_12hr = false
-time_format = "%T"
-style = "bold white"
-format = "[ $time]($style)"
 
 [custom.stunnel]
 when = "ps aux | grep stunnel | grep -v grep"
 command = "ps -o etime= -p $(ps aux | grep stunnel | grep -v grep | awk '{print $2}')"
 style = "red"
-format = "[TUNNEL OPEN for $output]($style)"
