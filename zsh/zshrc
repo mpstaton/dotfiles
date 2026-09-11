@@ -20,7 +20,7 @@ alias ..='cd ..'
 alias ...='cd ../..'
 
 # Initialize Oh My Posh
-eval "$(oh-my-posh init zsh --config /Users/mpstaton/.config/oh-my-posh/themes/my-tokyo.omp.json)"
+eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/themes/my-tokyo.omp.json)"
 
 # Enable command syntax highlighting if available
 if [ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
@@ -76,10 +76,10 @@ export ATUIN_FILTER_EXCLUDE_EXIT=0 # Include failed commands in history
 export ATUIN_FILTER_EXCLUDE_PATH=0 # Include commands from all paths
 
 # Added by Windsurf
-export PATH="/Users/mpstaton/.codeium/windsurf/bin:$PATH"
+export PATH="$HOME/.codeium/windsurf/bin:$PATH"
 
 # pnpm
-export PNPM_HOME="/Users/mpstaton/Library/pnpm"
+export PNPM_HOME="$HOME/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
@@ -88,10 +88,10 @@ esac
 export PATH="$HOME/Library/Python/3.9/bin:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+command -v pyenv >/dev/null && eval "$(pyenv init -)"
 
 # Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/mpstaton/.lmstudio/bin"
+export PATH="$PATH:$HOME/.lmstudio/bin"
 # End of LM Studio CLI section
 
 # Needed for Python venv direnv module to load environment variables:
@@ -99,9 +99,9 @@ eval "$(direnv hook zsh)"
 
 
 # bun completions
-[ -s "/Users/mpstaton/.bun/_bun" ] && source "/Users/mpstaton/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-export GITHUB_API_TOKEN=$(gh auth token)
+command -v gh >/dev/null && export GITHUB_API_TOKEN=$(gh auth token 2>/dev/null)
